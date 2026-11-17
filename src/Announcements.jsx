@@ -1,29 +1,42 @@
+import { useEffect, useState } from 'react';
 import './Announcements.css';
 
-const announcements = [
-  {
-    id: 'gpt-5-launch',
-    title: 'Introducing GPT-5',
-    publisher: 'OpenAI',
-    publishedAt: '2025-08-07',
-    dateLabel: '7 Aug 2025',
-    category: 'MODEL RELEASE',
-    summary: 'OpenAI introduced GPT-5 as a unified AI system with fast responses and deeper reasoning for complex tasks.',
-    url: 'https://openai.com/index/introducing-gpt-5/',
-  },
-  {
-    id: 'gemini-2-5-launch',
-    title: 'Introducing Gemini 2.5',
-    publisher: 'Google',
-    publishedAt: '2025-03-25',
-    dateLabel: '25 Mar 2025',
-    category: 'MODEL RELEASE',
-    summary: 'Google introduced Gemini 2.5 Pro Experimental, emphasizing reasoning, coding, and long-context understanding.',
-    url: 'https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-model-thinking-updates-march-2025/',
-  },
-];
-
 export default function Announcements() {
+  const [announcements, setAnnouncements] = useState([]);
+  const [status, setStatus] = useState('loading');
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadAnnouncements() {
+      try {
+        const response = await fetch('/api/announcements', {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error('Could not load announcements');
+        }
+
+        const data = await response.json();
+        if (!Array.isArray(data)) {
+          throw new Error('Unexpected announcements response');
+        }
+
+        setAnnouncements(data);
+        setStatus('success');
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error('Announcements request failed:', error);
+          setStatus('error');
+        }
+      }
+    }
+
+    loadAnnouncements();
+    return () => controller.abort();
+  }, []);
+
   return (
     <section className="announcements-section page-section" id="announcements" aria-labelledby="announcements-heading">
       <div className="section-heading">
@@ -35,22 +48,38 @@ export default function Announcements() {
         </p>
       </div>
 
-      <div className="announcements-grid">
-        {announcements.map((item) => (
-          <article className="announcement-card" key={item.id}>
-            <div className="announcement-meta">
-              <span>{item.category}</span>
-              <time dateTime={item.publishedAt}>{item.dateLabel}</time>
-            </div>
-            <h3>{item.title}</h3>
-            <p className="announcement-publisher">Published by {item.publisher}</p>
-            <p className="announcement-summary">{item.summary}</p>
-            <a href={item.url} target="_blank" rel="noopener noreferrer">
-              Read original announcement <span aria-hidden="true">↗</span>
-            </a>
-          </article>
-        ))}
-      </div>
+      {status === 'loading' && (
+        <p className="announcements-message" role="status">Loading announcements…</p>
+      )}
+
+      {status === 'error' && (
+        <p className="announcements-message" role="alert">
+          Announcements are unavailable. Make sure the RUPA Flask backend is running, then refresh the page.
+        </p>
+      )}
+
+      {status === 'success' && announcements.length === 0 && (
+        <p className="announcements-message" role="status">No announcements available yet.</p>
+      )}
+
+      {status === 'success' && announcements.length > 0 && (
+        <div className="announcements-grid">
+          {announcements.map((item) => (
+            <article className="announcement-card" key={item.id}>
+              <div className="announcement-meta">
+                <span>{item.category}</span>
+                <time dateTime={item.publishedAt}>{item.dateLabel}</time>
+              </div>
+              <h3>{item.title}</h3>
+              <p className="announcement-publisher">Published by {item.publisher}</p>
+              <p className="announcement-summary">{item.summary}</p>
+              <a href={item.url} target="_blank" rel="noopener noreferrer">
+                Read original announcement <span aria-hidden="true">↗</span>
+              </a>
+            </article>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
