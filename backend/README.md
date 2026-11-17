@@ -1,6 +1,6 @@
 # RUPA backend
 
-Minimal Flask API for local development. No database or external news collection is connected yet.
+Minimal Flask API for local development. Announcements are stored in a local SQLite database (`rupa.db`), automatically created on first startup and seeded with two curated historical announcements. External news collection is not connected yet.
 
 ## Windows PowerShell setup
 
