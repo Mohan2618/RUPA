@@ -78,3 +78,37 @@
   .discover-grid { grid-template-columns: 1fr; max-width: 560px; margin-top: 38px; }
   .discover-card { min-height: 250px; }
 }
+
+.discover-card-active {
+  border-color: rgba(255,82,99,.55);
+  background: rgba(255,255,255,.055);
+}
+
+.discover-details-toggle {
+  margin-top: 16px;
+  padding: 9px 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.discover-details-toggle:hover {
+  color: #ff6977;
+}
+
+.discover-details-toggle:focus-visible {
+  outline: 2px solid #ff5263;
+  outline-offset: 4px;
+}
+
+.discover-details {
+  margin: 8px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,.12);
+  color: #c4c4cc;
+  font-size: 13px;
+  line-height: 1.8;
+}
