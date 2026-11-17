@@ -1,0 +1,82 @@
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 150px 24px 100px;
+  box-sizing: border-box;
+  background: #101014;
+  scroll-margin-top: 80px;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: min(75vw, 820px);
+  height: 430px;
+  top: 16%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, rgba(200,16,46,.17), transparent 70%);
+  filter: blur(38px);
+  pointer-events: none;
+}
+
+.hero-eyebrow, .section-eyebrow {
+  color: #ff5263;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+.hero-eyebrow { margin-bottom: 25px; }
+.hero h1 {
+  color: #fff;
+  font-size: clamp(48px, 7.5vw, 92px);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -3.5px;
+  margin: 0;
+}
+
+.hero-description {
+  max-width: 650px;
+  margin-top: 28px;
+  color: #a5a5ad;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 36px; }
+.hero-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 6px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  transition: background .25s ease, border-color .25s ease, transform .25s ease;
+}
+.hero-button:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.5); }
+.hero-button-primary { background: #d9253d; border-color: #d9253d; }
+.hero-button-primary:hover { background: #f02d47; border-color: #f02d47; }
+.hero-button-primary span { font-size: 17px; }
+.hero-button-secondary { background: rgba(255,255,255,.035); }
+.hero-scroll-note { position: absolute; bottom: 34px; color: #777780; font-size: 9px; letter-spacing: 2px; }
+
+@media (max-width: 600px) {
+  .hero { min-height: 78vh; padding: 125px 22px 90px; }
+  .hero h1 { letter-spacing: -1.8px; }
+  .hero-description { font-size: 14px; }
+  .hero-actions { width: 100%; }
+  .hero-button { width: 100%; max-width: 300px; }
+}

@@ -1,0 +1,80 @@
+.discover-section {
+  background: #101014;
+}
+
+.discover-intro {
+  max-width: 700px;
+  margin: 22px auto 0;
+  color: #a5a5ad;
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.discover-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  max-width: 1120px;
+  margin: 58px auto 0;
+  text-align: left;
+}
+
+.discover-card {
+  min-height: 290px;
+  padding: 28px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 14px;
+  background: rgba(255,255,255,.035);
+  transition: transform .25s ease, border-color .25s ease, background .25s ease;
+}
+
+.discover-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,82,99,.45);
+  background: rgba(255,255,255,.055);
+}
+
+.discover-number {
+  color: #ff5263;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+.discover-tag {
+  margin-top: 30px;
+  color: #8e8e98;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+}
+
+.discover-card h3 {
+  color: #fff;
+  font-size: 23px;
+  font-weight: 500;
+  margin: 12px 0;
+}
+
+.discover-description {
+  color: #a5a5ad;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.discover-status {
+  margin-top: auto;
+  padding-top: 28px;
+  color: #ff6977;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+@media (max-width: 800px) {
+  .discover-grid { grid-template-columns: 1fr; max-width: 560px; margin-top: 38px; }
+  .discover-card { min-height: 250px; }
+}

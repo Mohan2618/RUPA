@@ -1,0 +1,130 @@
+
+
+.brands {
+  background: #101014;
+  padding: 100px 7%;
+  text-align: center;
+  scroll-margin-top: 90px;
+}
+
+
+.brands-eyebrow {
+  color: #ff3348;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+
+.brands h2 {
+  color: #ffffff;
+  font-size: clamp(32px, 4vw, 48px);
+  letter-spacing: -1.5px;
+  margin: 0;
+}
+
+.brands-intro {
+  max-width: 560px;
+  margin: 20px auto 48px;
+  color: #a5a5ad;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.brands-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+
+.brand-card {
+  min-height: 250px;
+  padding: 32px;
+  box-sizing: border-box;
+
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.brand-card:hover {
+  background: rgba(255, 255, 255, 0.075);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-4px);
+}
+
+
+.brand-category {
+  color: #ff5263;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+}
+
+.brand-card h3 {
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 500;
+  margin: 0 0 14px;
+}
+
+.brand-description {
+  color: #a5a5ad;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
+.brand-link {
+  margin-top: auto;
+  color: #ffffff;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.brand-link span {
+  color: #ff3348;
+  margin-left: 6px;
+}
+
+.brand-link:hover {
+  color: #ff5263;
+}
+
+.brand-link-disabled {
+  color: #777780;
+  cursor: default;
+}
+
+@media (max-width: 650px) {
+  .brands {
+    padding: 76px 22px;
+  }
+
+  .brands-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .brand-card {
+    min-height: 220px;
+    padding: 26px;
+  }
+}
