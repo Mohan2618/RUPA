@@ -53,6 +53,12 @@ export default function Discover() {
       .some((value) => value.toLowerCase().includes(normalizedQuery))
   );
 
+  const filteredSources = officialSources.filter((source) =>
+    [source.name, source.description]
+      .some((value) => value.toLowerCase().includes(normalizedQuery))
+  );
+  const noResults = filteredAreas.length === 0 && filteredSources.length === 0;
+
   return (
     <section className="discover-section page-section" id="discover">
       <div className="section-heading">
@@ -65,23 +71,23 @@ export default function Discover() {
       </div>
 
       <div className="discover-search">
-        <label htmlFor="discover-search-input">Search discovery topics</label>
+        <label htmlFor="discover-search-input">Search discovery topics and resources</label>
         <input
           id="discover-search-input"
           type="search"
-          placeholder="Search AI news, models, research..."
+          placeholder="Search topics, publishers, and research..."
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
         />
       </div>
 
-      {filteredAreas.length === 0 && (
+      {noResults && (
         <p className="discover-empty" role="status">
-          No discovery topics match your search. Try a different keyword.
+          No topics or resources match your search. Try a different keyword.
         </p>
       )}
 
-      <div className="discover-grid">
+      {filteredAreas.length > 0 && <div className="discover-grid">
         {filteredAreas.map((area) => {
           const expanded = selectedArea === area.number;
 
@@ -110,15 +116,15 @@ export default function Discover() {
             </article>
           );
         })}
-      </div>
-      <div className="discover-sources">
+      </div>}
+      {filteredSources.length > 0 && <div className="discover-sources">
         <div className="discover-sources-heading">
           <p className="section-eyebrow">EXPLORE ORIGINAL SOURCES</p>
           <h3>Official resources</h3>
           <p>Visit these publishers directly for their announcements and research.</p>
         </div>
         <div className="discover-sources-grid">
-          {officialSources.map((source) => (
+          {filteredSources.map((source) => (
             <article className="discover-source" key={source.url}>
               <h4>{source.name}</h4>
               <p>{source.description}</p>
@@ -128,7 +134,7 @@ export default function Discover() {
             </article>
           ))}
         </div>
-      </div>
+      </div>}
     </section>
   );
 }
