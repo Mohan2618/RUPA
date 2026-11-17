@@ -21,7 +21,15 @@
 .navbar-emblem { width: 26px; height: 32px; object-fit: contain; display: block; }
 .navbar-logo span { font-size: 22px; font-weight: 650; letter-spacing: 2px; line-height: 1; }
 .navbar-links { display: flex; align-items: center; justify-content: center; gap: clamp(14px, 2.5vw, 30px); }
-.navbar-links a { color: rgba(255,255,255,.72); text-decoration: none; font-size: 12px; transition: color .2s ease; }
+.navbar-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  color: rgba(255,255,255,.72);
+  text-decoration: none;
+  font-size: 12px;
+  transition: color .2s ease;
+}
 .navbar-links a:hover, .navbar-links a:focus-visible { color: #ff5263; }
 .navbar-cta { flex-shrink: 0; padding: 10px 15px; background: #fff; color: #101014; text-decoration: none; border-radius: 5px; font-size: 12px; transition: background .2s ease; }
 .navbar-cta:hover { background: #ffdce0; }
