@@ -30,3 +30,9 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# Local SQLite databases
+backend/*.db
+backend/*.db-journal
+backend/*.db-shm
+backend/*.db-wal
