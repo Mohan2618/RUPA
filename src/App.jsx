@@ -5,6 +5,7 @@ import Hero from './Hero';
 import About from './About';
 import Brands from './Brands';
 import Discover from './Discover';
+import Announcements from './Announcements';
 import Footer from './Footer';
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
         <About />
         <Brands />
         <Discover />
+        <Announcements />
         <Footer />
       </main>
     </>
