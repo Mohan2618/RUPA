@@ -25,6 +25,24 @@ const discoveryAreas = [
   },
 ];
 
+const officialSources = [
+  {
+    name: 'OpenAI News',
+    description: 'Official announcements and research updates from OpenAI.',
+    url: 'https://openai.com/news/',
+  },
+  {
+    name: 'Google DeepMind',
+    description: 'Research and technology updates from Google DeepMind.',
+    url: 'https://deepmind.google/discover/blog/',
+  },
+  {
+    name: 'Hugging Face Blog',
+    description: 'Updates on open models, datasets, and developer tools.',
+    url: 'https://huggingface.co/blog',
+  },
+];
+
 export default function Discover() {
   const [selectedArea, setSelectedArea] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -92,6 +110,24 @@ export default function Discover() {
             </article>
           );
         })}
+      </div>
+      <div className="discover-sources">
+        <div className="discover-sources-heading">
+          <p className="section-eyebrow">EXPLORE ORIGINAL SOURCES</p>
+          <h3>Official resources</h3>
+          <p>Visit these publishers directly for their announcements and research.</p>
+        </div>
+        <div className="discover-sources-grid">
+          {officialSources.map((source) => (
+            <article className="discover-source" key={source.url}>
+              <h4>{source.name}</h4>
+              <p>{source.description}</p>
+              <a href={source.url} target="_blank" rel="noopener noreferrer">
+                Visit official website <span aria-hidden="true">↗</span>
+              </a>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
