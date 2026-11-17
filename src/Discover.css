@@ -155,3 +155,63 @@
   font-size: 14px;
   text-align: center;
 }
+
+.discover-sources {
+  max-width: 1120px;
+  margin: 76px auto 0;
+}
+
+.discover-sources-heading h3 {
+  margin: 10px 0;
+  color: #fff;
+  font-size: 27px;
+  font-weight: 550;
+}
+
+.discover-sources-heading > p:last-child {
+  color: #a5a5ad;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.discover-sources-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.discover-source {
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 12px;
+  background: rgba(255,255,255,.035);
+}
+
+.discover-source h4 {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: 17px;
+}
+
+.discover-source p {
+  min-height: 60px;
+  color: #a5a5ad;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.discover-source a {
+  color: #ff6977;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.discover-source a:hover { text-decoration: underline; }
+
+@media (max-width: 800px) {
+  .discover-sources { margin-top: 56px; }
+  .discover-sources-grid { grid-template-columns: 1fr; }
+  .discover-source p { min-height: 0; }
+}
