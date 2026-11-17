@@ -48,3 +48,16 @@
   .announcements-grid { grid-template-columns: 1fr; margin-top: 32px; }
   .announcement-card { padding: 24px; }
 }
+
+.announcements-message {
+  max-width: 720px;
+  margin: 40px auto 0;
+  padding: 18px 22px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  background: rgba(255,255,255,.035);
+  color: #c4c4cc;
+  font-size: 14px;
+  line-height: 1.7;
+  text-align: center;
+}
