@@ -14,7 +14,11 @@ export default function App() {
     <>
       {!introDone && <LogoIntro onDone={() => setIntroDone(true)} />}
 
+      <a className="skip-link" href="#main-content">Skip to main content</a>
+
       <main
+        id="main-content"
+        tabIndex={-1}
         className="site-main"
         style={{
           opacity: introDone ? 1 : 0,
