@@ -27,6 +27,13 @@ const discoveryAreas = [
 
 export default function Discover() {
   const [selectedArea, setSelectedArea] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const filteredAreas = discoveryAreas.filter((area) =>
+    [area.title, area.description, area.tag, area.details]
+      .some((value) => value.toLowerCase().includes(normalizedQuery))
+  );
 
   return (
     <section className="discover-section page-section" id="discover">
@@ -39,8 +46,25 @@ export default function Discover() {
         </p>
       </div>
 
+      <div className="discover-search">
+        <label htmlFor="discover-search-input">Search discovery topics</label>
+        <input
+          id="discover-search-input"
+          type="search"
+          placeholder="Search AI news, models, research..."
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+        />
+      </div>
+
+      {filteredAreas.length === 0 && (
+        <p className="discover-empty" role="status">
+          No discovery topics match your search. Try a different keyword.
+        </p>
+      )}
+
       <div className="discover-grid">
-        {discoveryAreas.map((area) => {
+        {filteredAreas.map((area) => {
           const expanded = selectedArea === area.number;
 
           return (
