@@ -81,3 +81,12 @@ def insert_announcement(item):
             item["category"], item["summary"], item["url"],
         ))
     return item
+
+
+def delete_announcement(announcement_id):
+    with get_connection() as connection:
+        cursor = connection.execute(
+            "DELETE FROM announcements WHERE id = ?",
+            (announcement_id,),
+        )
+        return cursor.rowcount > 0
