@@ -131,7 +131,7 @@ export default function Navbar() {
         }
       }}
     >
-      <a href="/" className="navbar-logo" aria-label="RUPA home" onClick={closeMenu}>
+      <a href={currentPath === '/' ? '#home' : '/'} className="navbar-logo" aria-label="RUPA home" onClick={closeMenu}>
         <img src="/Logo/rupa-emblem.png" alt="" className="navbar-emblem" />
         <span>RUPA</span>
       </a>
@@ -148,7 +148,7 @@ export default function Navbar() {
       </button>
 
       <div id="navbar-links" className={`navbar-links${menuOpen ? ' navbar-links-open' : ''}`}>
-        <a href="/" aria-current={currentPath === '/' ? 'page' : undefined} onMouseEnter={() => setActiveGroup(null)} onFocus={() => setActiveGroup(null)} onClick={closeMenu}>Home</a>
+        <a href={currentPath === '/' ? '#home' : '/'} aria-current={currentPath === '/' ? 'page' : undefined} onMouseEnter={() => setActiveGroup(null)} onFocus={() => setActiveGroup(null)} onClick={closeMenu}>Home</a>
         {groups.map((group) => (
           <div
             className="navbar-group"
@@ -169,7 +169,7 @@ export default function Navbar() {
             </button>
           </div>
         ))}
-        <a href="/#about" onMouseEnter={() => setActiveGroup(null)} onFocus={() => setActiveGroup(null)} onClick={closeMenu}>About</a>
+        <a href={currentPath === '/' ? '#about' : '/#about'} onMouseEnter={() => setActiveGroup(null)} onFocus={() => setActiveGroup(null)} onClick={closeMenu}>About</a>
       </div>
 
       <a href="https://lumina-fbhi.onrender.com" target="_blank" rel="noopener noreferrer" className="navbar-cta" onMouseEnter={() => setActiveGroup(null)} onClick={closeMenu}>
@@ -189,7 +189,7 @@ export default function Navbar() {
           </div>
           <div className="navbar-mega-links">
             {group.links.map((link) => (
-              <a key={link.href} href={link.href} aria-current={(link.href.split('#')[0] || '/') === currentPath && currentPath !== '/' ? 'page' : undefined} onClick={closeMenu}>
+              <a key={link.href} href={currentPath === '/' && link.href.startsWith('/#') ? link.href.slice(1) : link.href} aria-current={(link.href.split('#')[0] || '/') === currentPath && currentPath !== '/' ? 'page' : undefined} onClick={closeMenu}>
                 <strong>{link.label}</strong>
                 <span>{link.description}</span>
               </a>
