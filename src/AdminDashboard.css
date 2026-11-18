@@ -20,3 +20,24 @@
 .admin-message { margin-top: 36px; padding: 24px; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; color: #c4c4cc; }
 .admin-note { margin-top: 26px; color: #888892; font-size: 12px; line-height: 1.7; }
 @media (max-width: 700px) { .admin-dashboard { padding: 44px 22px 72px; } .admin-header { flex-direction: column; gap: 4px; } .admin-summary { margin-top: 30px; } }
+
+.admin-create { margin-top: 38px; padding: 28px; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; background: rgba(255,255,255,.025); }
+.admin-create h2 { margin: 0 0 8px; color: #fff; font-size: 23px; font-weight: 600; }
+.admin-create > p { margin: 0 0 26px; color: #aaaab4; font-size: 13px; line-height: 1.7; }
+.admin-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.admin-field { display: flex; flex-direction: column; gap: 9px; min-width: 0; color: #dddde2; font-size: 12px; font-weight: 600; }
+.admin-field input, .admin-field textarea { width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,.17); border-radius: 7px; background: #1b1b21; color: #fff; font: inherit; font-size: 13px; font-weight: 400; color-scheme: dark; }
+.admin-field input::placeholder, .admin-field textarea::placeholder { color: #898994; }
+.admin-field input:focus-visible, .admin-field textarea:focus-visible { outline: 2px solid #ff5263; outline-offset: 2px; }
+.admin-summary-field { margin-top: 18px; }
+.admin-field textarea { resize: vertical; }
+.admin-form-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 22px; }
+.admin-form-actions button { border: 0; border-radius: 7px; background: #ff5263; color: #101014; padding: 12px 20px; font-weight: 700; font-size: 13px; cursor: pointer; }
+.admin-form-actions button:disabled { opacity: .6; cursor: wait; }
+.admin-form-success, .admin-form-error { margin: 0; font-size: 13px; line-height: 1.6; }
+.admin-form-success { color: #a5dfbd; }
+.admin-form-error { color: #ff8792; }
+@media (max-width: 700px) {
+  .admin-create { padding: 20px; }
+  .admin-form-grid { grid-template-columns: 1fr; }
+}
