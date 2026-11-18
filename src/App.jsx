@@ -9,6 +9,8 @@ import Announcements from './Announcements';
 import ExplorePage from './ExplorePage';
 import Footer from './Footer';
 import AdminDashboard from './AdminDashboard';
+import ContentMotion from './ContentMotion';
+import './ContentMotion.css';
 
 const explorePaths = new Set(['/models', '/technology', '/learn', '/research', '/companies', '/rupa-models']);
 
@@ -39,6 +41,7 @@ export default function App() {
           transition: 'opacity .8s ease',
         }}
       >
+        <ContentMotion />
         <Navbar />
         {isHome ? (
           <>
