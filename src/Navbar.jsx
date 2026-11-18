@@ -184,7 +184,7 @@ export default function Navbar() {
               {externalStatus === 'error' && <p>News unavailable. Start the Flask backend to load it.</p>}
               {externalStatus === 'success' && latestExternal.length === 0 && <p>No external announcements published yet.</p>}
               {externalStatus === 'success' && latestExternal.map((item) => (
-                <a href="/news" key={item.id} onClick={closeMenu}>
+                <a href={`/news#announcement-${encodeURIComponent(item.id)}`} key={item.id} onClick={closeMenu}>
                   <strong>{item.title}</strong>
                   <span>{item.publisher} · {item.dateLabel || item.publishedAt}</span>
                 </a>
@@ -198,7 +198,7 @@ export default function Navbar() {
               {updatesStatus === 'error' && <p>Updates unavailable. Start the Flask backend to load them.</p>}
               {updatesStatus === 'success' && latestRupa.length === 0 && <p>No RUPA announcements published yet.</p>}
               {updatesStatus === 'success' && latestRupa.map((item) => (
-                <a href="/#announcements" key={item.id} onClick={closeMenu}>
+                <a href={`/#announcement-${encodeURIComponent(item.id)}`} key={item.id} onClick={closeMenu}>
                   <strong>{item.title}</strong>
                   <span>{item.dateLabel || item.publishedAt}</span>
                 </a>
