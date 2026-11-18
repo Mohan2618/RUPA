@@ -119,3 +119,15 @@
   .navbar-mega-links a { padding: 10px 12px; }
   .navbar-mega:not([hidden]) { display: grid; }
 }
+
+.navbar-mega-updates { grid-column: 1 / -1; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.1); display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.navbar-mega-updates h3 { margin: 0 16px 0 0; color: #ff6977; font-size: 12px; font-weight: 600; }
+.navbar-mega-updates p { margin: 0; color: #a6a6b0; font-size: 12px; }
+.navbar-mega-updates a { display: flex; flex-direction: column; gap: 6px; max-width: 250px; padding: 8px 12px; border-radius: 7px; text-decoration: none; }
+.navbar-mega-updates a:hover, .navbar-mega-updates a:focus-visible { background: rgba(255,255,255,.07); }
+.navbar-mega-updates a strong { color: #fff; font-size: 12px; font-weight: 600; }
+.navbar-mega-updates a span { color: #9999a3; font-size: 11px; }
+@media (max-width: 700px) {
+  .navbar-mega-updates { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .navbar-mega-updates a { max-width: 100%; }
+}
