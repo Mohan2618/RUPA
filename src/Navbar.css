@@ -131,3 +131,9 @@
   .navbar-mega-updates { flex-direction: column; align-items: flex-start; gap: 8px; }
   .navbar-mega-updates a { max-width: 100%; }
 }
+
+/* Highlight the active destination without changing hover behavior. */
+.navbar-links > a[aria-current="page"],
+.navbar-group-toggle.navbar-current { color: #ff6977; }
+.navbar-mega-links a[aria-current="page"] { background: rgba(255,82,99,.12); }
+.navbar-mega-links a[aria-current="page"] strong { color: #ff8792; }
