@@ -1,0 +1,27 @@
+/* Lightweight progressive enhancement: content stays visible without JS. */
+@media (prefers-reduced-motion: no-preference) {
+  .motion-pending:not(.motion-visible) {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+  .motion-pending.motion-visible {
+    animation: rupa-content-enter 650ms cubic-bezier(.2,.75,.25,1) both;
+    animation-delay: var(--motion-delay, 0ms);
+  }
+  @keyframes rupa-content-enter {
+    from { opacity: 0; transform: translate3d(0, 20px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+  .brand-card, .announcement-card, .model-explorer-card, .discover-card, .discover-source {
+    transition: transform 250ms ease, border-color 250ms ease, background 250ms ease, box-shadow 250ms ease;
+  }
+  .brand-card:hover, .announcement-card:hover, .model-explorer-card:hover, .discover-card:hover, .discover-source:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255,82,99,.48);
+    box-shadow: 0 18px 45px rgba(0,0,0,.2);
+  }
+  .announcement-card:target { border-color: #ff5263; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-pending, .motion-visible { opacity: 1 !important; transform: none !important; animation: none !important; }
+}
