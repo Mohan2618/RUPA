@@ -30,3 +30,27 @@ Expected JSON:
 Keep this terminal running. Start the React frontend in a separate terminal from the project root with `npm run dev`.
 
 This is a development server only; it is not configured for production.
+
+## Create an announcement (local development only)
+
+Send a POST request to `http://127.0.0.1:5000/api/announcements` with header
+`Content-Type: application/json` and a JSON body:
+
+```json
+{
+  "id": "sample-ai-update",
+  "title": "Sample AI update",
+  "publisher": "Example Publisher",
+  "publishedAt": "2026-11-18",
+  "category": "TECHNOLOGY UPDATE",
+  "summary": "A sample announcement for testing the local RUPA API.",
+  "url": "https://example.com/"
+}
+```
+
+The API generates `dateLabel` automatically. A valid new record returns HTTP 201.
+Sending the same ID again returns HTTP 409. Missing or invalid fields return HTTP 400.
+The GET endpoint returns the saved announcement, and React displays it after refresh.
+
+**Security:** This POST route has no authentication. Run Flask on loopback for local
+testing only; do not expose this write endpoint on the public internet.
