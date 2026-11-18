@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Navbar.css';
 
 const groups = [
@@ -35,6 +35,35 @@ const groups = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeGroup, setActiveGroup] = useState(null);
+  const [latestRupa, setLatestRupa] = useState([]);
+  const [updatesStatus, setUpdatesStatus] = useState('loading');
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadRupaUpdates() {
+      try {
+        const response = await fetch('/api/announcements', {
+          signal: controller.signal,
+          cache: 'no-store',
+        });
+        if (!response.ok) throw new Error('Announcements unavailable');
+        const records = await response.json();
+        if (!Array.isArray(records)) throw new Error('Unexpected announcement response');
+        setLatestRupa(records
+          .filter((item) => typeof item.publisher === 'string' && item.publisher.trim().toLowerCase() === 'rupa')
+          .filter((item) => typeof item.title === 'string' && typeof item.id === 'string' && typeof item.publishedAt === 'string')
+          .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || a.id.localeCompare(b.id))
+          .slice(0, 3));
+        setUpdatesStatus('success');
+      } catch (error) {
+        if (!controller.signal.aborted) setUpdatesStatus('error');
+      }
+    }
+
+    loadRupaUpdates();
+    return () => controller.abort();
+  }, []);
   const closeMenu = () => { setMenuOpen(false); setActiveGroup(null); };
 
   return (
@@ -113,6 +142,20 @@ export default function Navbar() {
               </a>
             ))}
           </div>
+          {group.label === 'Innovations' && (
+            <div className="navbar-mega-updates">
+              <h3>Latest RUPA updates</h3>
+              {updatesStatus === 'loading' && <p>Loading updates…</p>}
+              {updatesStatus === 'error' && <p>Updates unavailable. Start the Flask backend to load them.</p>}
+              {updatesStatus === 'success' && latestRupa.length === 0 && <p>No RUPA announcements published yet.</p>}
+              {updatesStatus === 'success' && latestRupa.map((item) => (
+                <a href="/#announcements" key={item.id} onClick={closeMenu}>
+                  <strong>{item.title}</strong>
+                  <span>{item.dateLabel || item.publishedAt}</span>
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </nav>
