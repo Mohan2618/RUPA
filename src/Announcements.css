@@ -92,3 +92,10 @@
     grid-template-columns: minmax(0, 2fr) minmax(160px, 1fr) minmax(160px, 1fr);
   }
 }
+
+.announcements-pagination { display: flex; justify-content: center; align-items: center; gap: 18px; flex-wrap: wrap; max-width: 1120px; margin: 28px auto 0; color: #aaaab4; font-size: 12px; }
+.announcements-pagination button { padding: 10px 16px; border: 1px solid rgba(255,255,255,.2); border-radius: 7px; background: #25252d; color: #fff; font-size: 12px; cursor: pointer; }
+.announcements-pagination button:disabled { opacity: .45; cursor: not-allowed; }
+.announcements-pagination button:hover:not(:disabled) { border-color: #ff5263; }
+@media (min-width: 1101px) { .announcements-filters { grid-template-columns: minmax(0, 2fr) repeat(3, minmax(145px, 1fr)); } }
+@media (min-width: 701px) and (max-width: 1100px) { .announcements-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
