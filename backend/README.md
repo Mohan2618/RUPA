@@ -54,3 +54,14 @@ The GET endpoint returns the saved announcement, and React displays it after ref
 
 **Security:** This POST route has no authentication. Run Flask on loopback for local
 testing only; do not expose this write endpoint on the public internet.
+
+## Delete an announcement (local development only)
+
+Send `DELETE http://127.0.0.1:5000/api/announcements/sample-ai-update` in Postman.
+
+- HTTP 200: `{"message":"Announcement deleted","id":"sample-ai-update"}`
+- HTTP 404: `{"error":"Announcement not found"}`
+
+**Note:** The two initial demo announcements are inserted again when Flask restarts if they have been deleted. Test deletion using your own record such as `sample-ai-update`.
+
+Do not expose this unauthenticated write endpoint publicly.
