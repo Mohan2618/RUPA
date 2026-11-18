@@ -72,3 +72,9 @@
 .admin-pagination-buttons button:hover:not(:disabled) { border-color: #ff5263; }
 @media (min-width: 1101px) { .admin-filters { grid-template-columns: minmax(0, 2fr) repeat(3, minmax(145px, 1fr)); } }
 @media (min-width: 701px) and (max-width: 1100px) { .admin-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } .admin-filters .admin-field:first-child { grid-column: auto; } }
+
+.admin-summary-actions { display: flex; align-items: center; gap: 18px; }
+.admin-summary-actions button { padding: 9px 15px; border: 1px solid rgba(255,255,255,.2); border-radius: 6px; background: #25252d; color: #fff; font-size: 12px; cursor: pointer; }
+.admin-summary-actions button:hover:not(:disabled) { border-color: #ff5263; }
+.admin-summary-actions button:disabled { opacity: .5; cursor: wait; }
+.admin-refresh-message { margin: -12px 0 22px; color: #aaaab4; font-size: 12px; }
