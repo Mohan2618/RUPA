@@ -6,6 +6,7 @@ export default function Announcements() {
   const [status, setStatus] = useState('loading');
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [sortOrder, setSortOrder] = useState('newest');
 
   const categories = [...new Set(announcements.map((item) => item.category))].sort();
   const query = searchQuery.trim().toLowerCase();
@@ -14,6 +15,20 @@ export default function Announcements() {
     [item.title, item.publisher, item.category, item.summary]
       .some((value) => String(value).toLowerCase().includes(query))
   );
+
+
+  const sortedAnnouncements = [...filteredAnnouncements].sort((a, b) => {
+    switch (sortOrder) {
+      case 'oldest':
+        return a.publishedAt.localeCompare(b.publishedAt) || a.id.localeCompare(b.id);
+      case 'title':
+        return a.title.localeCompare(b.title) || a.id.localeCompare(b.id);
+      case 'publisher':
+        return a.publisher.localeCompare(b.publisher) || a.id.localeCompare(b.id);
+      default:
+        return b.publishedAt.localeCompare(a.publishedAt) || a.id.localeCompare(b.id);
+    }
+  });
 
   useEffect(() => {
     const controller = new AbortController();
@@ -93,6 +108,15 @@ export default function Announcements() {
                 ))}
               </select>
             </label>
+            <label>
+              <span>Sort by</span>
+              <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}>
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+                <option value="title">Title A–Z</option>
+                <option value="publisher">Publisher A–Z</option>
+              </select>
+            </label>
           </div>
           <p className="announcements-count" role="status">
             Showing {filteredAnnouncements.length} of {announcements.length} announcements
@@ -101,7 +125,7 @@ export default function Announcements() {
             <p className="announcements-message">No announcements match your search or category.</p>
           ) : (
           <div className="announcements-grid">
-          {filteredAnnouncements.map((item) => (
+          {sortedAnnouncements.map((item) => (
             <article className="announcement-card" key={item.id}>
               <div className="announcement-meta">
                 <span>{item.category}</span>
