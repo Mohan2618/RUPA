@@ -39,7 +39,10 @@ export default function Navbar() {
   const [updatesStatus, setUpdatesStatus] = useState('loading');
 
   useEffect(() => {
+    if (activeGroup !== 'Innovations') return;
+
     const controller = new AbortController();
+    setUpdatesStatus('loading');
 
     async function loadRupaUpdates() {
       try {
@@ -63,7 +66,7 @@ export default function Navbar() {
 
     loadRupaUpdates();
     return () => controller.abort();
-  }, []);
+  }, [activeGroup]);
   const closeMenu = () => { setMenuOpen(false); setActiveGroup(null); };
 
   return (
