@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 from flask import Flask, jsonify, request
 
-from database import delete_announcement, initialize_database, insert_announcement, list_announcements
+from database import delete_announcement, initialize_database, insert_announcement, list_announcements, update_announcement
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024
@@ -79,6 +79,48 @@ def create_announcement():
         return jsonify({"error": "An announcement with this id already exists"}), 409
 
     return jsonify(item), 201
+
+
+@app.put("/api/announcements/<announcement_id>")
+def edit_announcement(announcement_id):
+    # Development-only write endpoint. Add authentication before public deployment.
+    if not request.is_json:
+        return jsonify({"error": "Content-Type must be application/json"}), 415
+
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        return jsonify({"error": "Expected a JSON object"}), 400
+
+    editable_fields = tuple(field for field in REQUIRED_FIELDS if field != "id")
+    if "id" in payload and payload["id"] != announcement_id:
+        return jsonify({"error": "Announcement id cannot be changed"}), 400
+
+    item = {"id": announcement_id}
+    for field in editable_fields:
+        value = payload.get(field)
+        if not isinstance(value, str) or not value.strip():
+            return jsonify({"error": f"{field} must be a non-empty string"}), 400
+        item[field] = value.strip()
+        if len(item[field]) > MAX_LENGTHS[field]:
+            return jsonify({"error": f"{field} is too long"}), 400
+
+    try:
+        published = date.fromisoformat(item["publishedAt"])
+    except ValueError:
+        return jsonify({"error": "publishedAt must be a valid YYYY-MM-DD date"}), 400
+    if published.isoformat() != item["publishedAt"]:
+        return jsonify({"error": "publishedAt must use YYYY-MM-DD format"}), 400
+
+    parsed_url = urlparse(item["url"])
+    if parsed_url.scheme != "https" or not parsed_url.hostname or parsed_url.username or parsed_url.password:
+        return jsonify({"error": "url must be a valid HTTPS URL"}), 400
+
+    item["dateLabel"] = published.strftime("%d %b %Y").lstrip("0")
+
+    if not update_announcement(announcement_id, item):
+        return jsonify({"error": "Announcement not found"}), 404
+
+    return jsonify(item), 200
 
 
 @app.delete("/api/announcements/<announcement_id>")
