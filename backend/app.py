@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 from flask import Flask, jsonify, request
 
-from database import initialize_database, insert_announcement, list_announcements
+from database import delete_announcement, initialize_database, insert_announcement, list_announcements
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024
@@ -79,6 +79,15 @@ def create_announcement():
         return jsonify({"error": "An announcement with this id already exists"}), 409
 
     return jsonify(item), 201
+
+
+@app.delete("/api/announcements/<announcement_id>")
+def remove_announcement(announcement_id):
+    # Development-only write endpoint. Add authentication before public deployment.
+    if not delete_announcement(announcement_id):
+        return jsonify({"error": "Announcement not found"}), 404
+
+    return jsonify({"message": "Announcement deleted", "id": announcement_id}), 200
 
 
 if __name__ == "__main__":
