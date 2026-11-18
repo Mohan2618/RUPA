@@ -16,6 +16,7 @@ export default function ContentMotion() {
     if (reducedMotion.matches || !('IntersectionObserver' in window)) return;
 
     const observed = new WeakSet();
+    let mutationObserver;
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
@@ -41,7 +42,7 @@ export default function ContentMotion() {
     }
 
     register();
-    const mutationObserver = new MutationObserver(register);
+    mutationObserver = new MutationObserver(register);
     mutationObserver.observe(document.getElementById('main-content') || document.body, { childList: true, subtree: true });
 
     const onReduceChange = () => {
