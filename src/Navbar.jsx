@@ -111,7 +111,7 @@ export default function Navbar() {
     return () => document.removeEventListener('pointerdown', handleOutsidePointer);
   }, []);
 
-  const currentPath = window.location.pathname.replace(/\\/$/, '') || '/';
+  const currentPath = window.location.pathname.endsWith('/') && window.location.pathname !== '/' ? window.location.pathname.slice(0, -1) : window.location.pathname;
   const isGroupCurrent = (group) => group.links.some((link) => {
     const linkPath = link.href.split('#')[0] || '/';
     return linkPath !== '/' && linkPath === currentPath;
