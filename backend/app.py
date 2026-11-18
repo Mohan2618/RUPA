@@ -16,6 +16,7 @@ MAX_LENGTHS = {
     "id": 100,
     "title": 200,
     "publisher": 120,
+    "publishedAt": 10,
     "category": 80,
     "summary": 2000,
     "url": 2048,
