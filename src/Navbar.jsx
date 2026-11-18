@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './Navbar.css';
 
 const groups = [
@@ -33,6 +33,7 @@ const groups = [
 ];
 
 export default function Navbar() {
+  const navRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeGroup, setActiveGroup] = useState(null);
   const [latestRupa, setLatestRupa] = useState([]);
@@ -99,10 +100,27 @@ export default function Navbar() {
     return () => controller.abort();
   }, [activeGroup]);
 
+  useEffect(() => {
+    function handleOutsidePointer(event) {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setActiveGroup(null);
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener('pointerdown', handleOutsidePointer);
+    return () => document.removeEventListener('pointerdown', handleOutsidePointer);
+  }, []);
+
+  const currentPath = window.location.pathname.replace(/\\/$/, '') || '/';
+  const isGroupCurrent = (group) => group.links.some((link) => {
+    const linkPath = link.href.split('#')[0] || '/';
+    return linkPath !== '/' && linkPath === currentPath;
+  });
   const closeMenu = () => { setMenuOpen(false); setActiveGroup(null); };
 
   return (
     <nav
+      ref={navRef}
       className="navbar"
       aria-label="Main navigation"
       onMouseLeave={() => setActiveGroup(null)}
@@ -130,7 +148,7 @@ export default function Navbar() {
       </button>
 
       <div id="navbar-links" className={`navbar-links${menuOpen ? ' navbar-links-open' : ''}`}>
-        <a href="/" onMouseEnter={() => setActiveGroup(null)} onFocus={() => setActiveGroup(null)} onClick={closeMenu}>Home</a>
+        <a href="/" aria-current={currentPath === '/' ? 'page' : undefined} onMouseEnter={() => setActiveGroup(null)} onFocus={() => setActiveGroup(null)} onClick={closeMenu}>Home</a>
         {groups.map((group) => (
           <div
             className="navbar-group"
@@ -141,7 +159,7 @@ export default function Navbar() {
           >
             <button
               type="button"
-              className="navbar-group-toggle"
+              className={`navbar-group-toggle${isGroupCurrent(group) ? ' navbar-current' : ''}`}
               aria-expanded={activeGroup === group.label}
               aria-controls={`navbar-panel-${groups.indexOf(group)}`}
               onFocus={() => setActiveGroup(group.label)}
@@ -171,7 +189,7 @@ export default function Navbar() {
           </div>
           <div className="navbar-mega-links">
             {group.links.map((link) => (
-              <a key={link.href} href={link.href} onClick={closeMenu}>
+              <a key={link.href} href={link.href} aria-current={(link.href.split('#')[0] || '/') === currentPath && currentPath !== '/' ? 'page' : undefined} onClick={closeMenu}>
                 <strong>{link.label}</strong>
                 <span>{link.description}</span>
               </a>
