@@ -137,3 +137,28 @@
 .navbar-group-toggle.navbar-current { color: #ff6977; }
 .navbar-mega-links a[aria-current="page"] { background: rgba(255,82,99,.12); }
 .navbar-mega-links a[aria-current="page"] strong { color: #ff8792; }
+
+
+/* Animated dropdown entrance without delaying close or keyboard access. */
+@media (prefers-reduced-motion: no-preference) {
+  .navbar-mega:not([hidden]) {
+    transform-origin: top center;
+    animation: rupa-menu-enter 190ms cubic-bezier(.2,.75,.25,1) both;
+  }
+  @keyframes rupa-menu-enter {
+    from { opacity: 0; transform: translate3d(0, -8px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+  .navbar-mega-links a,
+  .navbar-mega-updates a {
+    transition: background 180ms ease, transform 180ms ease;
+  }
+  .navbar-mega-links a:hover,
+  .navbar-mega-updates a:hover {
+    transform: translateX(3px);
+  }
+  .navbar-cta {
+    transition: background 200ms ease, transform 200ms ease;
+  }
+  .navbar-cta:hover { transform: translateY(-2px); }
+}
