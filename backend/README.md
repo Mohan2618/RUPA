@@ -65,3 +65,27 @@ Send `DELETE http://127.0.0.1:5000/api/announcements/sample-ai-update` in Postma
 **Note:** The two initial demo announcements are inserted again when Flask restarts if they have been deleted. Test deletion using your own record such as `sample-ai-update`.
 
 Do not expose this unauthenticated write endpoint publicly.
+
+## Update an announcement (local development only)
+
+Send `PUT http://127.0.0.1:5000/api/announcements/sample-ai-update` with
+`Content-Type: application/json`. Include all six editable fields:
+
+```json
+{
+  "title": "Updated Sample AI Announcement",
+  "publisher": "Example Publisher",
+  "publishedAt": "2026-11-18",
+  "category": "TECHNOLOGY UPDATE",
+  "summary": "Updated summary for testing RUPA's PUT endpoint.",
+  "url": "https://example.com/"
+}
+```
+
+- HTTP 200 returns the updated record.
+- HTTP 400 indicates invalid input or an attempt to change the ID.
+- HTTP 404 means the announcement ID does not exist.
+- The URL ID is preserved, and `dateLabel` is generated from `publishedAt`.
+
+This is a full update (PUT), not a partial PATCH. The endpoint is unauthenticated
+and must remain restricted to local development.
