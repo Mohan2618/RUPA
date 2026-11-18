@@ -20,7 +20,7 @@ export default function Hero() {
         <a href="#innovations" className="hero-button hero-button-primary">
           Explore our innovations <span aria-hidden="true">↗</span>
         </a>
-        <a href="#discover" className="hero-button hero-button-secondary">
+        <a href="/discover" className="hero-button hero-button-secondary">
           Discover technology
         </a>
       </div>
