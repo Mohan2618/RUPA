@@ -172,8 +172,8 @@ export default function Navbar() {
         <a href="/#about" onMouseEnter={() => setActiveGroup(null)} onFocus={() => setActiveGroup(null)} onClick={closeMenu}>About</a>
       </div>
 
-      <a href="/#innovations" className="navbar-cta" onMouseEnter={() => setActiveGroup(null)} onClick={closeMenu}>
-        Explore RUPA <span aria-hidden="true">↗</span>
+      <a href="https://lumina-fbhi.onrender.com" target="_blank" rel="noopener noreferrer" className="navbar-cta" onMouseEnter={() => setActiveGroup(null)} onClick={closeMenu}>
+        Try Lumina <span aria-hidden="true">↗</span>
       </a>
 
       {groups.map((group, index) => (
