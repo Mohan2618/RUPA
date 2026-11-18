@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './Announcements.css';
 
-export default function Announcements() {
+export default function Announcements({ scope = 'all' }) {
   const [announcements, setAnnouncements] = useState([]);
   const [status, setStatus] = useState('loading');
   const [searchQuery, setSearchQuery] = useState('');
@@ -10,9 +10,13 @@ export default function Announcements() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
 
-  const categories = [...new Set(announcements.map((item) => item.category))].sort();
+  const scopedAnnouncements = announcements.filter((item) => {
+    const isRupa = item.publisher.trim().toLowerCase() === 'rupa';
+    return scope === 'rupa' ? isRupa : scope === 'external' ? !isRupa : true;
+  });
+  const categories = [...new Set(scopedAnnouncements.map((item) => item.category))].sort();
   const query = searchQuery.trim().toLowerCase();
-  const filteredAnnouncements = announcements.filter((item) =>
+  const filteredAnnouncements = scopedAnnouncements.filter((item) =>
     (categoryFilter === 'all' || item.category === categoryFilter) &&
     [item.title, item.publisher, item.category, item.summary]
       .some((value) => String(value).toLowerCase().includes(query))
@@ -74,11 +78,10 @@ export default function Announcements() {
   return (
     <section className="announcements-section page-section" id="announcements" aria-labelledby="announcements-heading">
       <div className="section-heading">
-        <p className="section-eyebrow">CURATED ANNOUNCEMENTS</p>
-        <h2 id="announcements-heading">From the source.</h2>
+        <p className="section-eyebrow">{scope === 'rupa' ? 'RUPA UPDATES' : 'CURATED ANNOUNCEMENTS'}</p>
+        <h2 id="announcements-heading">{scope === 'rupa' ? 'Latest from RUPA.' : 'From the source.'}</h2>
         <p className="announcements-intro">
-          Selected historical AI announcements, with publication dates and links to the original articles.
-          This is a curated archive, not a live news feed.
+          {scope === 'rupa' ? 'Official announcements from RUPA and its products.' : 'Curated announcements from other publishers, with links to their original sources. This is not a live news feed.'}
         </p>
       </div>
 
@@ -92,11 +95,11 @@ export default function Announcements() {
         </p>
       )}
 
-      {status === 'success' && announcements.length === 0 && (
-        <p className="announcements-message" role="status">No announcements available yet.</p>
+      {status === 'success' && scopedAnnouncements.length === 0 && (
+        <p className="announcements-message" role="status">No announcements available in this section yet.</p>
       )}
 
-      {status === 'success' && announcements.length > 0 && (
+      {status === 'success' && scopedAnnouncements.length > 0 && (
         <>
           <div className="announcements-filters">
             <label>
@@ -136,7 +139,7 @@ export default function Announcements() {
             </label>
           </div>
           <p className="announcements-count" role="status">
-            Showing {filteredAnnouncements.length === 0 ? 0 : (activePage - 1) * pageSize + 1}–{Math.min(activePage * pageSize, filteredAnnouncements.length)} of {filteredAnnouncements.length} matching announcements ({announcements.length} total)
+            Showing {filteredAnnouncements.length === 0 ? 0 : (activePage - 1) * pageSize + 1}–{Math.min(activePage * pageSize, filteredAnnouncements.length)} of {filteredAnnouncements.length} matching announcements ({scopedAnnouncements.length} total)
           </p>
           {filteredAnnouncements.length === 0 ? (
             <p className="announcements-message">No announcements match your search or category.</p>
