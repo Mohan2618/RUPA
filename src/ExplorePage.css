@@ -11,3 +11,22 @@
 .explore-resource-grid span { color: #ff6977; }
 .explore-home { display: inline-block; margin-top: 48px; color: #ff6977; text-decoration: none; }
 @media (max-width: 700px) { .explore-page { padding: 120px 22px 75px; } }
+
+
+/* Page-level entrance, independent of scroll-triggered card reveals. */
+@media (prefers-reduced-motion: no-preference) {
+  .explore-page-inner {
+    animation: rupa-page-enter 520ms cubic-bezier(.2,.75,.25,1) both;
+  }
+  @keyframes rupa-page-enter {
+    from { opacity: 0; transform: translate3d(0, 14px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+  .explore-resource-grid a {
+    transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+  }
+  .explore-resource-grid a:hover {
+    transform: translateY(-4px);
+    background: #202027;
+  }
+}
