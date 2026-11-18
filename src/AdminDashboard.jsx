@@ -26,6 +26,8 @@ export default function AdminDashboard() {
   const [sortOrder, setSortOrder] = useState('newest');
   const [pageSize, setPageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshMessage, setRefreshMessage] = useState('');
 
   const categories = [...new Set(announcements.map((item) => item.category))].sort();
   const filteredAnnouncements = announcements.filter((item) => {
@@ -58,6 +60,26 @@ export default function AdminDashboard() {
 
   function resetPagination() {
     setCurrentPage(1);
+  }
+
+  async function refreshAnnouncements() {
+    if (refreshing || saving || deletingId) return;
+    setRefreshing(true);
+    setRefreshMessage('');
+    try {
+      const response = await fetch('/api/announcements', { cache: 'no-store' });
+      if (!response.ok) throw new Error('Unable to refresh announcements');
+      const data = await response.json();
+      if (!Array.isArray(data)) throw new Error('Unexpected API response');
+      setAnnouncements(data);
+      setStatus('success');
+      setTableError('');
+      setRefreshMessage('Announcements refreshed.');
+    } catch (error) {
+      setRefreshMessage(error.message || 'Could not refresh announcements.');
+    } finally {
+      setRefreshing(false);
+    }
   }
 
   function updateField(event) {
@@ -234,8 +256,14 @@ export default function AdminDashboard() {
           <>
             <div className="admin-summary">
               <span>Stored announcements</span>
-              <strong>{announcements.length}</strong>
+              <div className="admin-summary-actions">
+                <strong>{announcements.length}</strong>
+                <button type="button" onClick={refreshAnnouncements} disabled={refreshing || saving || Boolean(deletingId)}>
+                  {refreshing ? 'Refreshing…' : 'Refresh'}
+                </button>
+              </div>
             </div>
+            {refreshMessage && <p className="admin-refresh-message" role="status">{refreshMessage}</p>}
             <div className="admin-filters">
               <label className="admin-field">
                 <span>Search announcements</span>
