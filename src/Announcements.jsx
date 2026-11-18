@@ -4,6 +4,16 @@ import './Announcements.css';
 export default function Announcements() {
   const [announcements, setAnnouncements] = useState([]);
   const [status, setStatus] = useState('loading');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+
+  const categories = [...new Set(announcements.map((item) => item.category))].sort();
+  const query = searchQuery.trim().toLowerCase();
+  const filteredAnnouncements = announcements.filter((item) =>
+    (categoryFilter === 'all' || item.category === categoryFilter) &&
+    [item.title, item.publisher, item.category, item.summary]
+      .some((value) => String(value).toLowerCase().includes(query))
+  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -63,8 +73,35 @@ export default function Announcements() {
       )}
 
       {status === 'success' && announcements.length > 0 && (
-        <div className="announcements-grid">
-          {announcements.map((item) => (
+        <>
+          <div className="announcements-filters">
+            <label>
+              <span>Search announcements</span>
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search titles, publishers, topics..."
+              />
+            </label>
+            <label>
+              <span>Category</span>
+              <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
+                <option value="all">All categories</option>
+                {categories.map((category) => (
+                  <option value={category} key={category}>{category}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+          <p className="announcements-count" role="status">
+            Showing {filteredAnnouncements.length} of {announcements.length} announcements
+          </p>
+          {filteredAnnouncements.length === 0 ? (
+            <p className="announcements-message">No announcements match your search or category.</p>
+          ) : (
+          <div className="announcements-grid">
+          {filteredAnnouncements.map((item) => (
             <article className="announcement-card" key={item.id}>
               <div className="announcement-meta">
                 <span>{item.category}</span>
@@ -79,6 +116,8 @@ export default function Announcements() {
             </article>
           ))}
         </div>
+          )}
+        </>
       )}
     </section>
   );
