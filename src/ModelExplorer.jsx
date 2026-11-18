@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './ExplorePage.css';
 import './ModelExplorer.css';
 
-export default function ModelExplorer() {
+export default function ModelExplorer({ scope = 'external' }) {
   const [announcements, setAnnouncements] = useState([]);
   const [status, setStatus] = useState('loading');
   const [query, setQuery] = useState('');
@@ -18,7 +18,7 @@ export default function ModelExplorer() {
         if (!Array.isArray(data)) throw new Error('Invalid API response');
         setAnnouncements(data.filter((item) =>
           item.category?.trim().toUpperCase() === 'MODEL RELEASE' &&
-          item.publisher?.trim().toLowerCase() !== 'rupa'
+          (scope === 'rupa' ? item.publisher?.trim().toLowerCase() === 'rupa' : item.publisher?.trim().toLowerCase() !== 'rupa')
         ));
         setStatus('success');
       } catch (error) {
@@ -27,7 +27,7 @@ export default function ModelExplorer() {
     }
     load();
     return () => controller.abort();
-  }, []);
+  }, [scope]);
 
   const publishers = [...new Set(announcements.map((item) => item.publisher))].sort();
   const normalizedQuery = query.trim().toLowerCase();
@@ -41,11 +41,12 @@ export default function ModelExplorer() {
   return (
     <section className="explore-page" aria-labelledby="explore-page-title">
       <div className="explore-page-inner">
-        <p className="explore-eyebrow">AI MODEL EXPLORER</p>
-        <h1 id="explore-page-title">Explore AI model releases.</h1>
+        <p className="explore-eyebrow">{scope === 'rupa' ? 'RUPA INNOVATIONS' : 'AI MODEL EXPLORER'}</p>
+        <h1 id="explore-page-title">{scope === 'rupa' ? 'Models from RUPA.' : 'Explore AI model releases.'}</h1>
         <p className="explore-description">
-          Browse curated model announcements from other organizations, with original sources.
-          This is a release explorer, not a model benchmark or live ranking.
+          {scope === 'rupa'
+            ? 'Explore model releases published by RUPA, with descriptions and official release links.'
+            : 'Browse curated model announcements from other organizations, with original sources. This is a release explorer, not a model benchmark or live ranking.'}
         </p>
 
         <div className="model-explorer-controls">
@@ -68,7 +69,7 @@ export default function ModelExplorer() {
           <>
             <p className="model-explorer-count" role="status">{visible.length} matching model releases</p>
             {visible.length === 0 ? (
-              <p className="model-explorer-message">No model releases match your filters yet.</p>
+              <p className="model-explorer-message">{scope === 'rupa' ? 'No RUPA model releases match your filters yet. Publish a MODEL RELEASE announcement with publisher RUPA to add one.' : 'No model releases match your filters yet.'}</p>
             ) : (
               <div className="model-explorer-grid">
                 {visible.map((item) => (
@@ -84,7 +85,7 @@ export default function ModelExplorer() {
             )}
           </>
         )}
-        <a className="explore-home" href="/discover">Back to Discover</a>
+        <a className="explore-home" href={scope === 'rupa' ? '/' : '/discover'}>{scope === 'rupa' ? 'Back to RUPA home' : 'Back to Discover'}</a>
       </div>
     </section>
   );
