@@ -7,6 +7,8 @@ export default function Announcements() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortOrder, setSortOrder] = useState('newest');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
 
   const categories = [...new Set(announcements.map((item) => item.category))].sort();
   const query = searchQuery.trim().toLowerCase();
@@ -29,6 +31,13 @@ export default function Announcements() {
         return b.publishedAt.localeCompare(a.publishedAt) || a.id.localeCompare(b.id);
     }
   });
+
+  const totalPages = Math.max(1, Math.ceil(sortedAnnouncements.length / pageSize));
+  const activePage = Math.min(currentPage, totalPages);
+  const visibleAnnouncements = sortedAnnouncements.slice(
+    (activePage - 1) * pageSize,
+    activePage * pageSize
+  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -95,13 +104,13 @@ export default function Announcements() {
               <input
                 type="search"
                 value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
+                onChange={(event) => { setSearchQuery(event.target.value); setCurrentPage(1); }}
                 placeholder="Search titles, publishers, topics..."
               />
             </label>
             <label>
               <span>Category</span>
-              <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
+              <select value={categoryFilter} onChange={(event) => { setCategoryFilter(event.target.value); setCurrentPage(1); }}>
                 <option value="all">All categories</option>
                 {categories.map((category) => (
                   <option value={category} key={category}>{category}</option>
@@ -110,22 +119,30 @@ export default function Announcements() {
             </label>
             <label>
               <span>Sort by</span>
-              <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}>
+              <select value={sortOrder} onChange={(event) => { setSortOrder(event.target.value); setCurrentPage(1); }}>
                 <option value="newest">Newest first</option>
                 <option value="oldest">Oldest first</option>
                 <option value="title">Title A–Z</option>
                 <option value="publisher">Publisher A–Z</option>
               </select>
             </label>
+            <label>
+              <span>Per page</span>
+              <select value={pageSize} onChange={(event) => { setPageSize(Number(event.target.value)); setCurrentPage(1); }}>
+                <option value={6}>6</option>
+                <option value={12}>12</option>
+                <option value={24}>24</option>
+              </select>
+            </label>
           </div>
           <p className="announcements-count" role="status">
-            Showing {filteredAnnouncements.length} of {announcements.length} announcements
+            Showing {filteredAnnouncements.length === 0 ? 0 : (activePage - 1) * pageSize + 1}–{Math.min(activePage * pageSize, filteredAnnouncements.length)} of {filteredAnnouncements.length} matching announcements ({announcements.length} total)
           </p>
           {filteredAnnouncements.length === 0 ? (
             <p className="announcements-message">No announcements match your search or category.</p>
           ) : (
           <div className="announcements-grid">
-          {sortedAnnouncements.map((item) => (
+          {visibleAnnouncements.map((item) => (
             <article className="announcement-card" key={item.id}>
               <div className="announcement-meta">
                 <span>{item.category}</span>
@@ -140,6 +157,13 @@ export default function Announcements() {
             </article>
           ))}
         </div>
+          )}
+          {filteredAnnouncements.length > 0 && (
+            <nav className="announcements-pagination" aria-label="Announcement pages">
+              <button type="button" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={activePage === 1}>Previous</button>
+              <span>Page {activePage} of {totalPages}</span>
+              <button type="button" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={activePage === totalPages}>Next</button>
+            </nav>
           )}
         </>
       )}
