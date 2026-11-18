@@ -1,4 +1,5 @@
 import './ExplorePage.css';
+import ModelExplorer from './ModelExplorer';
 
 const pages = {
   '/models': {
@@ -40,6 +41,7 @@ const pages = {
 };
 
 export default function ExplorePage({ path }) {
+  if (path === '/models') return <ModelExplorer />;
   const page = pages[path];
   if (!page) return null;
 
