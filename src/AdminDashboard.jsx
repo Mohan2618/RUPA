@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 import './AdminDashboard.css';
 
+const standardCategories = [
+  'MODEL RELEASE',
+  'PRODUCT RELEASE',
+  'RESEARCH',
+  'TECHNOLOGY UPDATE',
+];
+
 const emptyForm = {
   id: '',
   title: '',
@@ -30,6 +37,7 @@ export default function AdminDashboard() {
   const [refreshMessage, setRefreshMessage] = useState('');
 
   const categories = [...new Set(announcements.map((item) => item.category))].sort();
+  const formCategories = [...new Set([...standardCategories, ...categories, form.category].filter(Boolean))].sort();
   const filteredAnnouncements = announcements.filter((item) => {
     const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
     const query = searchQuery.trim().toLowerCase();
@@ -214,7 +222,6 @@ export default function AdminDashboard() {
                 { name: 'title', label: 'Title', placeholder: 'Announcement title', maxLength: 200 },
                 { name: 'publisher', label: 'Publisher', placeholder: 'Official publisher', maxLength: 120 },
                 { name: 'publishedAt', label: 'Publication date', type: 'date' },
-                { name: 'category', label: 'Category', placeholder: 'MODEL RELEASE', maxLength: 80 },
                 { name: 'url', label: 'Original source URL', type: 'url', placeholder: 'https://example.com/article', maxLength: 2048 },
               ].map((field) => (
                 <label className="admin-field" key={field.name}>
@@ -232,6 +239,15 @@ export default function AdminDashboard() {
                   />
                 </label>
               ))}
+              <label className="admin-field">
+                <span>Category</span>
+                <select name="category" value={form.category} onChange={updateField} required>
+                  <option value="" disabled>Select a category</option>
+                  {formCategories.map((category) => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+              </label>
             </div>
             <label className="admin-field admin-summary-field">
               <span>Summary</span>
