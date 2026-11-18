@@ -1,0 +1,13 @@
+.explore-page { min-height: 78vh; padding: 155px 7% 100px; background: #0c0c10; color: #fff; }
+.explore-page-inner { max-width: 1100px; margin: 0 auto; }
+.explore-eyebrow { color: #ff6977; letter-spacing: 2px; font-size: 12px; font-weight: 700; }
+.explore-page h1 { max-width: 850px; margin: 18px 0 24px; font-size: clamp(38px, 6vw, 76px); font-weight: 600; line-height: 1.12; }
+.explore-description { max-width: 720px; color: #b0b0ba; font-size: 17px; line-height: 1.8; }
+.explore-resources { margin-top: 65px; }
+.explore-resources h2 { font-size: 22px; margin-bottom: 22px; }
+.explore-resource-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.explore-resource-grid a { display: flex; justify-content: space-between; gap: 12px; padding: 24px; border: 1px solid rgba(255,255,255,.13); border-radius: 12px; color: #fff; background: #17171d; text-decoration: none; }
+.explore-resource-grid a:hover { border-color: #ff5263; }
+.explore-resource-grid span { color: #ff6977; }
+.explore-home { display: inline-block; margin-top: 48px; color: #ff6977; text-decoration: none; }
+@media (max-width: 700px) { .explore-page { padding: 120px 22px 75px; } }
