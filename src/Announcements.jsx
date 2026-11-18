@@ -43,6 +43,27 @@ export default function Announcements({ scope = 'all' }) {
     activePage * pageSize
   );
 
+  // A navbar link can target a card on any pagination page.
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash.startsWith('#announcement-') || status !== 'success') return;
+    const targetId = decodeURIComponent(hash.slice('#announcement-'.length));
+    const index = sortedAnnouncements.findIndex((item) => item.id === targetId);
+    if (index < 0) return;
+    setCurrentPage(Math.floor(index / pageSize) + 1);
+  }, [status, announcements, pageSize]);
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash.startsWith('#announcement-')) return;
+    const targetId = decodeURIComponent(hash.slice('#announcement-'.length));
+    if (!visibleAnnouncements.some((item) => item.id === targetId)) return;
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(`announcement-${targetId}`)?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [status, currentPage, announcements, pageSize]);
+
   useEffect(() => {
     const controller = new AbortController();
 
@@ -146,7 +167,7 @@ export default function Announcements({ scope = 'all' }) {
           ) : (
           <div className="announcements-grid">
           {visibleAnnouncements.map((item) => (
-            <article className="announcement-card" key={item.id}>
+            <article className="announcement-card" id={`announcement-${item.id}`} key={item.id}>
               <div className="announcement-meta">
                 <span>{item.category}</span>
                 <time dateTime={item.publishedAt}>{item.dateLabel}</time>
