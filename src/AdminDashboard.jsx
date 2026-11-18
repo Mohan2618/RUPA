@@ -24,6 +24,8 @@ export default function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortOrder, setSortOrder] = useState('newest');
+  const [pageSize, setPageSize] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const categories = [...new Set(announcements.map((item) => item.category))].sort();
   const filteredAnnouncements = announcements.filter((item) => {
@@ -46,6 +48,17 @@ export default function AdminDashboard() {
         return b.publishedAt.localeCompare(a.publishedAt) || a.id.localeCompare(b.id);
     }
   });
+
+  const totalPages = Math.max(1, Math.ceil(sortedAnnouncements.length / pageSize));
+  const activePage = Math.min(currentPage, totalPages);
+  const paginatedAnnouncements = sortedAnnouncements.slice(
+    (activePage - 1) * pageSize,
+    activePage * pageSize
+  );
+
+  function resetPagination() {
+    setCurrentPage(1);
+  }
 
   function updateField(event) {
     const { name, value } = event.target;
@@ -230,12 +243,12 @@ export default function AdminDashboard() {
                   type="search"
                   placeholder="Search title, publisher, category..."
                   value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
+                  onChange={(event) => { setSearchQuery(event.target.value); resetPagination(); }}
                 />
               </label>
               <label className="admin-field">
                 <span>Filter by category</span>
-                <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
+                <select value={categoryFilter} onChange={(event) => { setCategoryFilter(event.target.value); resetPagination(); }}>
                   <option value="all">All categories</option>
                   {categories.map((category) => (
                     <option key={category} value={category}>{category}</option>
@@ -244,11 +257,19 @@ export default function AdminDashboard() {
               </label>
               <label className="admin-field">
                 <span>Sort announcements</span>
-                <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}>
+                <select value={sortOrder} onChange={(event) => { setSortOrder(event.target.value); resetPagination(); }}>
                   <option value="newest">Newest first</option>
                   <option value="oldest">Oldest first</option>
                   <option value="title">Title A–Z</option>
                   <option value="publisher">Publisher A–Z</option>
+                </select>
+              </label>
+              <label className="admin-field">
+                <span>Rows per page</span>
+                <select value={pageSize} onChange={(event) => { setPageSize(Number(event.target.value)); resetPagination(); }}>
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
                 </select>
               </label>
             </div>
@@ -273,7 +294,7 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {sortedAnnouncements.map((item) => (
+                    {paginatedAnnouncements.map((item) => (
                       <tr key={item.id}>
                         <td><strong>{item.title}</strong><small>{item.id}</small></td>
                         <td>{item.publisher}</td>
@@ -290,6 +311,22 @@ export default function AdminDashboard() {
                   </tbody>
                 </table>
               </div>
+            )}
+            {filteredAnnouncements.length > 0 && (
+              <nav className="admin-pagination" aria-label="Announcement pages">
+                <span>
+                  Showing {(activePage - 1) * pageSize + 1}–{Math.min(activePage * pageSize, sortedAnnouncements.length)} of {sortedAnnouncements.length}
+                </span>
+                <div className="admin-pagination-buttons">
+                  <button type="button" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={activePage === 1}>
+                    Previous
+                  </button>
+                  <span>Page {activePage} of {totalPages}</span>
+                  <button type="button" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={activePage === totalPages}>
+                    Next
+                  </button>
+                </div>
+              </nav>
             )}
           </>
         )}
