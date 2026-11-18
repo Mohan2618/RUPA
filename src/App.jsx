@@ -12,10 +12,30 @@ import AdminDashboard from './AdminDashboard';
 import ContentMotion from './ContentMotion';
 import './ContentMotion.css';
 
+const INTRO_KEY = 'rupa-intro-completed';
+
+function shouldShowIntro() {
+  try {
+    // Deep links should reach their destination immediately.
+    return !window.location.hash && sessionStorage.getItem(INTRO_KEY) !== 'true';
+  } catch {
+    return !window.location.hash;
+  }
+}
+
 const explorePaths = new Set(['/models', '/technology', '/learn', '/research', '/companies', '/rupa-models']);
 
 export default function App() {
-  const [introDone, setIntroDone] = useState(false);
+  const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
+
+  function finishIntro() {
+    try {
+      sessionStorage.setItem(INTRO_KEY, 'true');
+    } catch {
+      // Storage can be unavailable in restricted browsing modes.
+    }
+    setIntroDone(true);
+  }
   const path = window.location.pathname.replace(/\/$/, '') || '/';
 
   // Development-only dashboard path; not an authentication boundary.
@@ -30,7 +50,7 @@ export default function App() {
 
   return (
     <>
-      {isHome && !introDone && <LogoIntro onDone={() => setIntroDone(true)} />}
+      {isHome && !introDone && <LogoIntro onDone={finishIntro} />}
       <a className="skip-link" href="#main-content">Skip to main content</a>
       <main
         id="main-content"
