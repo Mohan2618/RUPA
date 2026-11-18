@@ -66,3 +66,18 @@ def list_announcements():
             ORDER BY published_at DESC, id
         """).fetchall()
     return [dict(row) for row in rows]
+
+
+def insert_announcement(item):
+    with get_connection() as connection:
+        connection.execute("""
+            INSERT INTO announcements (
+                id, title, publisher, published_at, date_label,
+                category, summary, url
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            item["id"], item["title"], item["publisher"],
+            item["publishedAt"], item["dateLabel"],
+            item["category"], item["summary"], item["url"],
+        ))
+    return item
