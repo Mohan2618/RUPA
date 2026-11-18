@@ -23,6 +23,7 @@ export default function AdminDashboard() {
   const [tableError, setTableError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [sortOrder, setSortOrder] = useState('newest');
 
   const categories = [...new Set(announcements.map((item) => item.category))].sort();
   const filteredAnnouncements = announcements.filter((item) => {
@@ -31,6 +32,19 @@ export default function AdminDashboard() {
     const matchesSearch = [item.id, item.title, item.publisher, item.category, item.summary]
       .some((value) => String(value).toLowerCase().includes(query));
     return matchesCategory && matchesSearch;
+  });
+
+  const sortedAnnouncements = [...filteredAnnouncements].sort((a, b) => {
+    switch (sortOrder) {
+      case 'oldest':
+        return a.publishedAt.localeCompare(b.publishedAt) || a.id.localeCompare(b.id);
+      case 'title':
+        return a.title.localeCompare(b.title) || a.id.localeCompare(b.id);
+      case 'publisher':
+        return a.publisher.localeCompare(b.publisher) || a.id.localeCompare(b.id);
+      default:
+        return b.publishedAt.localeCompare(a.publishedAt) || a.id.localeCompare(b.id);
+    }
   });
 
   function updateField(event) {
@@ -228,6 +242,15 @@ export default function AdminDashboard() {
                   ))}
                 </select>
               </label>
+              <label className="admin-field">
+                <span>Sort announcements</span>
+                <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}>
+                  <option value="newest">Newest first</option>
+                  <option value="oldest">Oldest first</option>
+                  <option value="title">Title A–Z</option>
+                  <option value="publisher">Publisher A–Z</option>
+                </select>
+              </label>
             </div>
             <p className="admin-filter-count" role="status">
               Showing {filteredAnnouncements.length} of {announcements.length} announcements
@@ -250,7 +273,7 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredAnnouncements.map((item) => (
+                    {sortedAnnouncements.map((item) => (
                       <tr key={item.id}>
                         <td><strong>{item.title}</strong><small>{item.id}</small></td>
                         <td>{item.publisher}</td>
