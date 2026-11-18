@@ -41,3 +41,12 @@
   .admin-create { padding: 20px; }
   .admin-form-grid { grid-template-columns: 1fr; }
 }
+
+.admin-row-actions { white-space: nowrap; }
+.admin-row-actions button { padding: 8px 12px; margin-right: 8px; border: 1px solid rgba(255,255,255,.2); border-radius: 6px; background: #25252d; color: #fff; font-size: 12px; cursor: pointer; }
+.admin-row-actions button:hover:not(:disabled) { border-color: #ff5263; }
+.admin-row-actions .admin-delete { color: #ff8792; }
+.admin-row-actions button:disabled { opacity: .5; cursor: not-allowed; }
+.admin-form-actions .admin-cancel { background: transparent; color: #e5e5e9; border: 1px solid rgba(255,255,255,.25); }
+.admin-field input:disabled { opacity: .55; cursor: not-allowed; }
+.admin-table-error { margin: 0 0 16px; }
