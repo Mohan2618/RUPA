@@ -90,3 +90,18 @@ def delete_announcement(announcement_id):
             (announcement_id,),
         )
         return cursor.rowcount > 0
+
+
+def update_announcement(announcement_id, item):
+    with get_connection() as connection:
+        cursor = connection.execute("""
+            UPDATE announcements
+            SET title = ?, publisher = ?, published_at = ?, date_label = ?,
+                category = ?, summary = ?, url = ?
+            WHERE id = ?
+        """, (
+            item["title"], item["publisher"], item["publishedAt"],
+            item["dateLabel"], item["category"], item["summary"],
+            item["url"], announcement_id,
+        ))
+        return cursor.rowcount > 0
