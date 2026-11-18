@@ -72,3 +72,16 @@
   .navbar-links a { min-height: 44px; padding: 10px 6px; font-size: 13px; }
   .navbar-cta { display: none; }
 }
+
+.navbar-group { position: relative; }
+.navbar-group-toggle { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0; border: 0; background: none; color: rgba(255,255,255,.72); font: inherit; font-size: 12px; cursor: pointer; }
+.navbar-group-toggle:hover, .navbar-group-toggle:focus-visible { color: #ff5263; }
+.navbar-dropdown { position: absolute; top: calc(100% + 8px); left: -20px; min-width: 225px; padding: 12px; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; background: #15151a; box-shadow: 0 20px 55px rgba(0,0,0,.5); }
+.navbar-dropdown a { display: flex; min-height: 39px; padding: 8px 12px; border-radius: 6px; white-space: nowrap; }
+.navbar-dropdown a:hover { background: rgba(255,255,255,.06); }
+@media (max-width: 700px) {
+  .navbar-group { width: 100%; }
+  .navbar-group-toggle { width: 100%; justify-content: space-between; min-height: 44px; font-size: 13px; }
+  .navbar-dropdown { position: static; min-width: 0; box-shadow: none; margin: 0 0 8px; padding: 4px 10px; }
+  .navbar-dropdown a { white-space: normal; }
+}
