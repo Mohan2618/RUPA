@@ -41,7 +41,8 @@ const pages = {
 };
 
 export default function ExplorePage({ path }) {
-  if (path === '/models') return <ModelExplorer />;
+  if (path === '/models') return <ModelExplorer scope="external" />;
+  if (path === '/rupa-models') return <ModelExplorer scope="rupa" />;
   const page = pages[path];
   if (!page) return null;
 
