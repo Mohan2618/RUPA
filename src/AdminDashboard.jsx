@@ -21,6 +21,17 @@ export default function AdminDashboard() {
   const [editingId, setEditingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [tableError, setTableError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+
+  const categories = [...new Set(announcements.map((item) => item.category))].sort();
+  const filteredAnnouncements = announcements.filter((item) => {
+    const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
+    const query = searchQuery.trim().toLowerCase();
+    const matchesSearch = [item.id, item.title, item.publisher, item.category, item.summary]
+      .some((value) => String(value).toLowerCase().includes(query));
+    return matchesCategory && matchesSearch;
+  });
 
   function updateField(event) {
     const { name, value } = event.target;
@@ -198,9 +209,34 @@ export default function AdminDashboard() {
               <span>Stored announcements</span>
               <strong>{announcements.length}</strong>
             </div>
+            <div className="admin-filters">
+              <label className="admin-field">
+                <span>Search announcements</span>
+                <input
+                  type="search"
+                  placeholder="Search title, publisher, category..."
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                />
+              </label>
+              <label className="admin-field">
+                <span>Filter by category</span>
+                <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
+                  <option value="all">All categories</option>
+                  {categories.map((category) => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <p className="admin-filter-count" role="status">
+              Showing {filteredAnnouncements.length} of {announcements.length} announcements
+            </p>
             {tableError && <p className="admin-form-error admin-table-error" role="alert">{tableError}</p>}
             {announcements.length === 0 ? (
               <p className="admin-message">No announcements are stored yet.</p>
+            ) : filteredAnnouncements.length === 0 ? (
+              <p className="admin-message">No announcements match your filters.</p>
             ) : (
               <div className="admin-table-scroll">
                 <table className="admin-table">
@@ -214,7 +250,7 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {announcements.map((item) => (
+                    {filteredAnnouncements.map((item) => (
                       <tr key={item.id}>
                         <td><strong>{item.title}</strong><small>{item.id}</small></td>
                         <td>{item.publisher}</td>
