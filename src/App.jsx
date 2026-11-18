@@ -7,9 +7,15 @@ import Brands from './Brands';
 import Discover from './Discover';
 import Announcements from './Announcements';
 import Footer from './Footer';
+import AdminDashboard from './AdminDashboard';
 
 export default function App() {
   const [introDone, setIntroDone] = useState(false);
+
+  // Development-only dashboard path; not an authentication boundary.
+  if (window.location.pathname === '/admin' || window.location.pathname === '/admin/') {
+    return <AdminDashboard />;
+  }
 
   return (
     <>
