@@ -1,0 +1,15 @@
+.model-explorer-controls { display: grid; grid-template-columns: minmax(0, 2fr) minmax(200px, 1fr); gap: 18px; margin: 44px 0 18px; }
+.model-explorer-controls label { display: flex; flex-direction: column; gap: 9px; color: #c4c4cc; font-size: 12px; font-weight: 600; }
+.model-explorer-controls input, .model-explorer-controls select { width: 100%; box-sizing: border-box; padding: 13px 15px; border: 1px solid rgba(255,255,255,.2); border-radius: 8px; background: #1b1b21; color: #fff; font: inherit; font-size: 13px; font-weight: 400; color-scheme: dark; }
+.model-explorer-controls input:focus-visible, .model-explorer-controls select:focus-visible { outline: 2px solid #ff5263; outline-offset: 2px; }
+.model-explorer-count, .model-explorer-message { color: #aaaab4; font-size: 13px; margin: 18px 0 28px; }
+.model-explorer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.model-explorer-card { padding: 28px; border: 1px solid rgba(255,255,255,.13); border-radius: 12px; background: #17171d; display: flex; flex-direction: column; align-items: flex-start; }
+.model-explorer-card:hover { border-color: rgba(255,82,99,.5); }
+.model-explorer-category { color: #ff6977; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; }
+.model-explorer-card h2 { margin: 16px 0 8px; color: #fff; font-size: 22px; line-height: 1.35; }
+.model-explorer-meta { color: #aaaab4; font-size: 12px; }
+.model-explorer-summary { color: #c4c4cc; font-size: 13px; line-height: 1.8; flex: 1; }
+.model-explorer-card a { color: #ff6977; font-size: 12px; font-weight: 600; text-decoration: none; margin-top: 18px; }
+.model-explorer-card a:hover { text-decoration: underline; }
+@media (max-width: 700px) { .model-explorer-controls, .model-explorer-grid { grid-template-columns: 1fr; } }
