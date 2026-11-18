@@ -18,10 +18,58 @@ export default function AdminDashboard() {
   const [saving, setSaving] = useState(false);
   const [formMessage, setFormMessage] = useState('');
   const [formError, setFormError] = useState('');
+  const [editingId, setEditingId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+  const [tableError, setTableError] = useState('');
 
   function updateField(event) {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
+  }
+
+  function startEdit(item) {
+    setEditingId(item.id);
+    setForm({
+      id: item.id,
+      title: item.title,
+      publisher: item.publisher,
+      publishedAt: item.publishedAt,
+      category: item.category,
+      summary: item.summary,
+      url: item.url,
+    });
+    setFormMessage('');
+    setFormError('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setForm(emptyForm);
+    setFormError('');
+    setFormMessage('');
+  }
+
+  async function deleteAnnouncement(item) {
+    if (deletingId || saving) return;
+    if (!window.confirm(`Delete "${item.title}"? This cannot be undone.`)) return;
+
+    setDeletingId(item.id);
+    setTableError('');
+    try {
+      const response = await fetch(`/api/announcements/${encodeURIComponent(item.id)}`, {
+        method: 'DELETE',
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(result?.error || 'Could not delete announcement');
+
+      setAnnouncements((current) => current.filter((record) => record.id !== item.id));
+      if (editingId === item.id) cancelEdit();
+    } catch (error) {
+      setTableError(error.message || 'Could not delete announcement');
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   async function createAnnouncement(event) {
@@ -33,8 +81,10 @@ export default function AdminDashboard() {
     setFormMessage('');
 
     try {
-      const response = await fetch('/api/announcements', {
-        method: 'POST',
+      const response = await fetch(
+        editingId ? `/api/announcements/${encodeURIComponent(editingId)}` : '/api/announcements',
+        {
+        method: editingId ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
@@ -43,12 +93,15 @@ export default function AdminDashboard() {
         throw new Error(result?.error || 'Could not create announcement');
       }
 
-      setAnnouncements((current) => [result, ...current].sort(
-        (a, b) => b.publishedAt.localeCompare(a.publishedAt) || a.id.localeCompare(b.id)
-      ));
+      setAnnouncements((current) => (
+        editingId
+          ? current.map((item) => item.id === editingId ? result : item)
+          : [...current, result]
+      ).sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || a.id.localeCompare(b.id)));
       setStatus('success');
       setForm(emptyForm);
-      setFormMessage('Announcement saved successfully.');
+      setFormMessage(editingId ? 'Announcement updated successfully.' : 'Announcement saved successfully.');
+      setEditingId(null);
     } catch (error) {
       setFormError(error.message || 'Could not create announcement.');
     } finally {
@@ -92,8 +145,8 @@ export default function AdminDashboard() {
         </header>
 
         <section className="admin-create" aria-labelledby="admin-create-heading">
-          <h2 id="admin-create-heading">Create announcement</h2>
-          <p>Add a curated announcement with a link to its original source.</p>
+          <h2 id="admin-create-heading">{editingId ? "Edit announcement" : "Create announcement"}</h2>
+          <p>{editingId ? "Update the selected announcement. Its ID stays unchanged." : "Add a curated announcement with a link to its original source."}</p>
           <form onSubmit={createAnnouncement} className="admin-create-form">
             <div className="admin-form-grid">
               {[
@@ -114,6 +167,7 @@ export default function AdminDashboard() {
                     placeholder={field.placeholder}
                     maxLength={field.maxLength}
                     pattern={field.pattern}
+                    disabled={field.name === 'id' && Boolean(editingId)}
                     required
                   />
                 </label>
@@ -124,7 +178,8 @@ export default function AdminDashboard() {
               <textarea name="summary" value={form.summary} onChange={updateField} rows={4} maxLength={2000} required placeholder="Briefly explain what was announced." />
             </label>
             <div className="admin-form-actions">
-              <button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Create announcement'}</button>
+              <button type="submit" disabled={saving}>{saving ? 'Saving…' : editingId ? 'Save changes' : 'Create announcement'}</button>
+              {editingId && <button type="button" className="admin-cancel" onClick={cancelEdit} disabled={saving}>Cancel editing</button>}
               {formMessage && <p className="admin-form-success" role="status">{formMessage}</p>}
               {formError && <p className="admin-form-error" role="alert">{formError}</p>}
             </div>
@@ -143,6 +198,7 @@ export default function AdminDashboard() {
               <span>Stored announcements</span>
               <strong>{announcements.length}</strong>
             </div>
+            {tableError && <p className="admin-form-error admin-table-error" role="alert">{tableError}</p>}
             {announcements.length === 0 ? (
               <p className="admin-message">No announcements are stored yet.</p>
             ) : (
@@ -154,6 +210,7 @@ export default function AdminDashboard() {
                       <th scope="col">Publisher</th>
                       <th scope="col">Category</th>
                       <th scope="col">Published</th>
+                      <th scope="col">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -163,6 +220,12 @@ export default function AdminDashboard() {
                         <td>{item.publisher}</td>
                         <td>{item.category}</td>
                         <td><time dateTime={item.publishedAt}>{item.dateLabel}</time></td>
+                        <td className="admin-row-actions">
+                          <button type="button" onClick={() => startEdit(item)} disabled={saving || Boolean(deletingId)}>Edit</button>
+                          <button type="button" className="admin-delete" onClick={() => deleteAnnouncement(item)} disabled={saving || Boolean(deletingId)}>
+                            {deletingId === item.id ? 'Deleting…' : 'Delete'}
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -172,7 +235,7 @@ export default function AdminDashboard() {
           </>
         )}
         <p className="admin-note">
-          Development preview only. This page has no admin authentication. Creation is enabled for local testing only.
+          Development preview only. This page has no admin authentication. Create, edit, and delete are enabled for local testing only.
           Do not expose management APIs publicly.
         </p>
       </div>
