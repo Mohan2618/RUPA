@@ -37,6 +37,8 @@ export default function Navbar() {
   const [activeGroup, setActiveGroup] = useState(null);
   const [latestRupa, setLatestRupa] = useState([]);
   const [updatesStatus, setUpdatesStatus] = useState('loading');
+  const [latestExternal, setLatestExternal] = useState([]);
+  const [externalStatus, setExternalStatus] = useState('loading');
 
   useEffect(() => {
     if (activeGroup !== 'Innovations') return;
@@ -67,6 +69,36 @@ export default function Navbar() {
     loadRupaUpdates();
     return () => controller.abort();
   }, [activeGroup]);
+  useEffect(() => {
+    if (activeGroup !== 'Discover') return;
+
+    const controller = new AbortController();
+    setExternalStatus('loading');
+
+    async function loadExternalUpdates() {
+      try {
+        const response = await fetch('/api/announcements', {
+          signal: controller.signal,
+          cache: 'no-store',
+        });
+        if (!response.ok) throw new Error('Announcements unavailable');
+        const records = await response.json();
+        if (!Array.isArray(records)) throw new Error('Unexpected announcement response');
+        setLatestExternal(records
+          .filter((item) => typeof item.publisher === 'string' && item.publisher.trim().toLowerCase() !== 'rupa')
+          .filter((item) => typeof item.title === 'string' && typeof item.id === 'string' && typeof item.publishedAt === 'string')
+          .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || a.id.localeCompare(b.id))
+          .slice(0, 3));
+        setExternalStatus('success');
+      } catch (error) {
+        if (!controller.signal.aborted) setExternalStatus('error');
+      }
+    }
+
+    loadExternalUpdates();
+    return () => controller.abort();
+  }, [activeGroup]);
+
   const closeMenu = () => { setMenuOpen(false); setActiveGroup(null); };
 
   return (
@@ -145,6 +177,20 @@ export default function Navbar() {
               </a>
             ))}
           </div>
+          {group.label === 'Discover' && (
+            <div className="navbar-mega-updates">
+              <h3>Latest AI news</h3>
+              {externalStatus === 'loading' && <p>Loading news…</p>}
+              {externalStatus === 'error' && <p>News unavailable. Start the Flask backend to load it.</p>}
+              {externalStatus === 'success' && latestExternal.length === 0 && <p>No external announcements published yet.</p>}
+              {externalStatus === 'success' && latestExternal.map((item) => (
+                <a href="/news" key={item.id} onClick={closeMenu}>
+                  <strong>{item.title}</strong>
+                  <span>{item.publisher} · {item.dateLabel || item.publishedAt}</span>
+                </a>
+              ))}
+            </div>
+          )}
           {group.label === 'Innovations' && (
             <div className="navbar-mega-updates">
               <h3>Latest RUPA updates</h3>
